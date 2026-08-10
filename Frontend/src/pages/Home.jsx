@@ -21,7 +21,7 @@ function Home() {
             );
 
             if (data.success) {
-                dispatch(setUserData(data.data))
+                dispatch(setUserData(data.user));
             }
 
         } catch (error) {

@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    conversations: []
+    conversations: [],
+    selectedConversation: null
 }
 
 const conversationSlice = createSlice({
@@ -13,9 +14,12 @@ const conversationSlice = createSlice({
         },
         addConversation: (state, action) => {
             state.conversations.unshift(action.payload)
+        },
+        setSelectedConversation: (state, action) => {
+            state.selectedConversation = action.payload
         }
     }
 })
 
-export const { setConversations, addConversation } = conversationSlice.actions
+export const { setConversations, addConversation, setSelectedConversation } = conversationSlice.actions
 export default conversationSlice.reducer

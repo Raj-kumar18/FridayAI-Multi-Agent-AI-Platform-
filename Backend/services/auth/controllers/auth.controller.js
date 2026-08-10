@@ -79,7 +79,8 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
     try {
-        const sessionId = req.cookies.session;
+        const sessionId = req.cookies?.session;
+        console.log(sessionId)
 
         if (sessionId) {
             await redis.del(`session:${sessionId}`);

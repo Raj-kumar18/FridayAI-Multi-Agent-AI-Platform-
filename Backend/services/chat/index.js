@@ -11,7 +11,6 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 app.use("/", chatRouter)
-
 app.listen(process.env.PORT, () => {
     console.log(`Chat service is running on port ${process.env.PORT}`)
     connectDB()

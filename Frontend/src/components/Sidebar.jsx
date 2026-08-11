@@ -108,13 +108,18 @@ function Sidebar() {
 
                 <div className="relative shrink-0">
                     {
-                        (userData?.avatar || !imageError)
-                            ? <img src={userData?.avatar} alt="" className="w-9 h-9 rounded-[10px] object-cover border-2 border-indigo-500/23" onError={() => setImageError(true)} />
-                            :
-                            <div className="w-9 h-9 rounded-[10px] object-cover border-2 border-indigo-500/23 flex items-center justify-center ">
+                        userData?.avatar && !imageError ? (
+                            <img
+                                src={userData.avatar}
+                                alt="User avatar"
+                                className="w-9 h-9 rounded-[10px] object-cover border-2 border-indigo-500/23"
+                                onError={() => setImageError(true)}
+                            />
+                        ) : (
+                            <div className="w-9 h-9 rounded-[10px] border-2 border-indigo-500/23 flex items-center justify-center">
                                 <User className="text-orange-500" />
                             </div>
-
+                        )
                     }
                 </div>
 

@@ -3,15 +3,15 @@ import { useSelector } from "react-redux"
 function Nav() {
 
     const { selectedConversation } = useSelector(state => state.conversation)
-    const { messages } = useSelector(state => state.message)
-
-
+    const { messages = [] } = useSelector(
+        (state) => state.message
+    );
 
 
     return (
         <>
 
-            {selectedConversation && <div className="flex h-14 items-center gap-2.5 px-5 border-b border-white/[0.06] bg-[#0d0f14]">
+            {selectedConversation && <div className="flex h-14 items-center gap-2.5 px-5 border-b border-white/[0.06] bg-[#0d0f14] w-full">
                 <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-orange-500/10 border border-orange-500/10 shrink-0">
                     <MessageSquare size={13} className="text-orange-500 " />
                 </div>

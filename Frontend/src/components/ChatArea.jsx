@@ -8,12 +8,13 @@ import getMessage from "../features/getMessage";
 function ChatArea() {
     const dispatch = useDispatch()
     const { selectedConversation } = useSelector(state => state.conversation)
-    const { messages } = useSelector(state => state.message)
+
 
     useEffect(() => {
         const fetchMessage = async () => {
             const { data } = await getMessage(selectedConversation._id)
-            dispatch(setMessage(data.data))
+            dispatch(setMessage(data))
+            console.log(data)
         }
         if (selectedConversation) {
             fetchMessage()
@@ -21,9 +22,9 @@ function ChatArea() {
     }, [selectedConversation])
 
     return (
-        <div className="flex-1 flex flex-col h-full p-4 overflow-y-auto scrollbar-hide">
+        <div className="flex min-h-full items-center justify-center text-center flex-1 flex-col w-full">
             <Nav />
-            <MessageList messages={messages} />
+            <MessageList />
             <ChatInput />
         </div>
     )

@@ -22,7 +22,7 @@ function ChatArea() {
     }, [selectedConversation])
 
     return (
-        <div className="flex min-h-full items-center justify-center text-center flex-1 flex-col w-full">
+        <div className="flex h-full min-h-0 flex-1 flex-col w-full overflow-hidden">
             <Nav />
             <MessageList />
             <ChatInput />

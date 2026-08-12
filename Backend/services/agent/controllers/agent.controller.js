@@ -1,11 +1,14 @@
 import axios from "axios";
 import { graph } from "../graph/graph.js"
 import dotenv from "dotenv"
+import { addMessage } from "../config/memory.js";
 dotenv.config()
 
 export const agent = async (req, res) => {
     try {
         const { prompt, conversationId } = req.body
+
+
         await axios.post(
             `${process.env.CHAT_SERVICE_URL}/saveMessage`,
             {
@@ -19,6 +22,8 @@ export const agent = async (req, res) => {
             prompt,
             conversationId
         })
+        await addMessage(conversationId, "user", prompt)
+        await addMessage(conversationId, "assistant", result.aiResponse)
         await axios.post(
             `${process.env.CHAT_SERVICE_URL}/saveMessage`,
             {

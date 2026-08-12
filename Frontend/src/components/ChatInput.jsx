@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import sendMessage from "../features/sendMessage";
 import { addMessage, setMessage } from "../redux/slices/messageSlice";
+import { createConversation } from "../features/createConversation.js";
+import { addConversation, setSelectedConversation } from "../redux/slices/conversationSlice.js";
 
 function ChatInput() {
     const { selectedConversation } = useSelector(
@@ -18,15 +20,22 @@ function ChatInput() {
         const prompt = value.trim();
 
         if (!prompt) return;
+        let conversation = selectedConversation
 
-        if (!selectedConversation?._id) {
-            console.log("No conversation selected");
-            return;
+        if (!conversation) {
+            const data = await createConversation();
+            console.log("CREATE CONVERSATION DATA:", data);
+            dispatch(setSelectedConversation(data.data))
+            dispatch(addConversation(data.data))
+            conversation = data.data
+
         }
+
+
 
         const payload = {
             prompt,
-            conversationId: selectedConversation._id,
+            conversationId: conversation._id,
         };
 
         console.log("SEND PAYLOAD:", payload);
@@ -84,8 +93,7 @@ function ChatInput() {
                     <button
                         onClick={handleSendMessage}
                         disabled={
-                            !value.trim() ||
-                            !selectedConversation?._id
+                            !value.trim()
                         }
                         className={`flex items-center justify-center w-8 h-8 border-none cursor-pointer transition-all rounded-xl px-2 py-1.5 duration-150 hover:opacity-90 text-white ${!value.trim() ||
                             !selectedConversation?._id

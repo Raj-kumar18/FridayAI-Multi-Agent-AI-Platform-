@@ -17,9 +17,10 @@ function ChatArea() {
             console.log(data)
         }
         if (selectedConversation) {
+            if (selectedConversation.title == "New Chat") return
             fetchMessage()
         }
-    }, [selectedConversation])
+    }, [selectedConversation?._id])
 
     return (
         <div className="flex h-full min-h-0 flex-1 flex-col w-full overflow-hidden">

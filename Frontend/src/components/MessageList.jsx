@@ -63,6 +63,7 @@ function MessageList() {
                         key={msg._id || i}
                         role={msg?.role}
                         content={msg?.content}
+                        images={msg?.images || []}
                     />
                 ))
 

@@ -1,4 +1,4 @@
-import { Mic, Paperclip, Send } from "lucide-react";
+import { Code2, FileText, Image, MessageSquare, Mic, Paperclip, Presentation, Search, Send, Zap } from "lucide-react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import sendMessage from "../features/sendMessage";
@@ -8,6 +8,7 @@ import { addConversation, setConvTitle, setSelectedConversation } from "../redux
 import { updateConversation } from "../features/updateConversation.js";
 
 function ChatInput() {
+    const [selectedAgent, setSelectedAgent] = useState("Auto")
     const { selectedConversation } = useSelector(
         (state) => state.conversation
     );
@@ -48,6 +49,7 @@ function ChatInput() {
         const payload = {
             prompt,
             conversationId: conversation._id,
+            agent: selectedAgent.toLocaleLowerCase()
         };
 
         console.log("SEND PAYLOAD:", payload);
@@ -60,9 +62,10 @@ function ChatInput() {
             const data = await sendMessage(payload);
             dispatch(addMessage({
                 role: "assistant",
-                content: data.data
+                content: data.data.answer,
+                images: data.data.images
             }))
-            console.log("DATA:", data);
+            console.log("DATA:", data.data.answer, data.data.images);
 
             // Clear input after successful request
             setValue("");
@@ -75,10 +78,73 @@ function ChatInput() {
         }
     };
 
+    const agents = [
+        {
+            id: "auto",
+            icon: Zap,
+            label: "Auto"
+        },
+        {
+            id: "chat",
+            icon: MessageSquare,
+            label: "Chat"
+        },
+        {
+            id: "coding",
+            icon: Code2,
+            label: "Coding"
+        },
+        {
+            id: "pdf",
+            icon: FileText,
+            label: "PDF"
+        },
+        {
+            id: "ppt",
+            icon: Presentation,
+            label: "PPT"
+        },
+        {
+            id: "image",
+            icon: Image,
+            label: "Image"
+        },
+        {
+            id: "search",
+            icon: Search,
+            label: "Search"
+        }
+    ]
+
+
     return (
         <div className="w-full overflow-hidden px-3 md:px-5 py-4 border-t border-white/[0.06] bg-[#0d0f14]">
 
             <div className="flex flex-col gap-2 bg-white/[0.03] border border-white/[0.07] rounded-2xl px-4 pt-3.5 pb-3">
+
+                <div className="flex w-[80%} gap-2 pr-2 flex-wrap">
+                    {agents.map((agent) => {
+                        const isActive = selectedAgent === agent.label
+                        const Icon = agent.icon
+                        console.log(isActive)
+
+                        return (
+                            <button
+                                key={agent.id}
+                                onClick={() => setSelectedAgent(agent.label)}
+                                className={`flex items-center gap-2 px-3 py-1.5 rounded-2xl transition-colors duration-200 cursor-pointer text-sm border
+                            ${isActive
+                                        ? "bg-orange-600 text-white border-orange-600"
+                                        : "text-slate-400 bg-orange-500/[0.03] hover:text-slate-200 hover:bg-orange-500/[0.06] border-white/[0.07]"
+                                    }`}
+                            >
+                                <Icon size={18} />
+                                <span className="font-medium">{agent.label}</span>
+                            </button>
+                        )
+                    })}
+
+                </div>
 
                 <textarea
                     value={value}
@@ -89,6 +155,8 @@ function ChatInput() {
                 />
 
                 <div className="flex items-center justify-between">
+
+
 
                     <div className="flex items-center gap-1">
 

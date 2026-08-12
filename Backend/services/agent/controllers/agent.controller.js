@@ -6,7 +6,7 @@ dotenv.config()
 
 export const agent = async (req, res) => {
     try {
-        const { prompt, conversationId } = req.body
+        const { prompt, conversationId, agent } = req.body
 
 
         await axios.post(
@@ -17,19 +17,29 @@ export const agent = async (req, res) => {
                 content: prompt
             }
         )
-
+        await addMessage(conversationId, "user", prompt)
         const result = await graph.invoke({
             prompt,
-            conversationId
+            conversationId,
+            agent
         })
-        await addMessage(conversationId, "user", prompt)
+
+        console.log("🔥 GRAPH RESULT:", result)
+        console.log("🔥 AI RESPONSE:", result.aiResponse)
+        if (!result.aiResponse) {
+            throw new Error(
+                `Agent "${result.agent}" did not return aiResponse`
+            );
+        }
+
         await addMessage(conversationId, "assistant", result.aiResponse)
         await axios.post(
             `${process.env.CHAT_SERVICE_URL}/saveMessage`,
             {
                 conversationId,
                 role: "assistant",
-                content: result.aiResponse
+                content: result.aiResponse,
+                images: result.images
             }
         )
 
@@ -46,7 +56,10 @@ export const agent = async (req, res) => {
         return res.status(200).json({
             success: true,
             message: "Agent response received",
-            data: result.aiResponse
+            data: {
+                answer: result.aiResponse,
+                images: result.images
+            }
         })
 
     } catch (error) {

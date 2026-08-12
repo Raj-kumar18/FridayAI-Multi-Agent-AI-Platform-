@@ -75,7 +75,7 @@ function Sidebar() {
 
 
 
-                <button className="flex items-center justify-center h-7 w-7 rounded-lg border-none bg-transparent text-slate-500 transition-all duration-150 hover:bg-orange-500/10 hover:text-orange-500 cursor-pointer mb-8" onClick={handleCreateConversation}>
+                <button className="flex items-center justify-center h-7 w-7 rounded-lg border-none bg-transparent text-slate-500 transition-all duration-150 hover:bg-orange-500/10 hover:text-orange-500 cursor-pointer mb-8" onClick={() => dispatch(setSelectedConversation(null))}>
                     <Plus size={16} />
                 </button>
 
@@ -147,7 +147,7 @@ function Sidebar() {
                         free
                     </span>
 
-                    <button className="flex items-center justify-center h-7 w-7 rounded-lg border-none bg-transparent text-slate-500 transition-all duration-150 hover:bg-white/[0.05] hover:text-slate-200 cursor-pointer" onClick={handleCreateConversation}>
+                    <button className="flex items-center justify-center h-7 w-7 rounded-lg border-none bg-transparent text-slate-500 transition-all duration-150 hover:bg-white/[0.05] hover:text-slate-200 cursor-pointer" onClick={() => dispatch(setSelectedConversation(null))}>
                         <PenSquare size={16} />
                     </button>
 
@@ -158,7 +158,7 @@ function Sidebar() {
 
 
                 <div className="px-4 pt-4 pb-1 ">
-                    <button className="w-full flex items-center justify-center  gap-2.5 text-sm font-medium text-white bg-linear-to-br from-orange-500 to-orange-700 rounded-xl py-[10px] border-none cursor-pointer hover:opacity-90 transition-opacity duration-150" onClick={handleCreateConversation}>
+                    <button className="w-full flex items-center justify-center  gap-2.5 text-sm font-medium text-white bg-linear-to-br from-orange-500 to-orange-700 rounded-xl py-[10px] border-none cursor-pointer hover:opacity-90 transition-opacity duration-150" onClick={() => dispatch(setSelectedConversation(null))}>
                         <Plus size={18} />
                         <span>New Chat</span>
                     </button>

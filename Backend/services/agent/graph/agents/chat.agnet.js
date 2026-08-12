@@ -5,11 +5,24 @@ import { getMemory } from "../../config/memory.js"
 export const chatAgent = async (states) => {
     const llm = await getLLMModel("chat")
     const history = await getMemory(states.conversationId)
-    console.log(history)
+
+    const searchContext = states.searchResults ? `
+    Web Search Results:
+    ${JSON.stringify(states.searchResults)}
+
+    Answer the user using only the above search results
+
+    `: ""
 
 
     const prompt = `
     You are a FridayAI, an Intelligent AI assistant.
+
+    ${searchContext}
+
+    if searchContext exists:
+    - Use search results to answe.
+    - Do not mention internal tools.
 
     Rules:
     - For simple questions ,greeting ,and short queries , respond naturally in plain text.
@@ -32,14 +45,17 @@ export const chatAgent = async (states) => {
     const messages = [
         new SystemMessage(prompt)
     ]
-    history.forEach(msg => {
+    history.forEach((msg) => {
+        if (!msg.content) return;
+
         if (msg.role === "user") {
-            messages.push(new HumanMessage(msg.content))
+            messages.push(new HumanMessage(msg.content));
         }
+
         if (msg.role === "assistant") {
-            messages.push(new AIMessage(msg.content))
+            messages.push(new AIMessage(msg.content));
         }
-    })
+    });
 
     messages.push(new HumanMessage(states.prompt))
 

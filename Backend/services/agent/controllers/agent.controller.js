@@ -58,7 +58,8 @@ export const agent = async (req, res) => {
             message: "Agent response received",
             data: {
                 answer: result.aiResponse,
-                images: result.images
+                images: result.images,
+                artifacts: result.artifacts
             }
         })
 

@@ -8,9 +8,13 @@ function App() {
   const dispatch = useDispatch()
   useEffect(() => {
     const getUser = async () => {
-      const data = await getCurrentUser()
-      if (data.success) {
-        dispatch(setUserData(data.data))
+      try {
+        const data = await getCurrentUser()
+        if (data.success) {
+          dispatch(setUserData(data.data))
+        } ``
+      } catch (error) {
+        console.log("error", error)
       }
     }
 

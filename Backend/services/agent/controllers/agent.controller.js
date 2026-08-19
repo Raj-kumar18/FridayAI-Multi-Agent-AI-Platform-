@@ -38,8 +38,9 @@ export const agent = async (req, res) => {
             {
                 conversationId,
                 role: "assistant",
-                content: result.aiResponse,
-                images: result.images
+                content: result?.aiResponse,
+                images: result?.images,
+                artifacts: result?.artifacts
             }
         )
 

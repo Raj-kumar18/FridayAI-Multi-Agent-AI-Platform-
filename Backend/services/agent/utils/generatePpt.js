@@ -1,0 +1,678 @@
+import pptxgen from "pptxgenjs";
+
+// ============================================================
+// COLORS
+// ============================================================
+
+export const COLORS = {
+    // Backgrounds
+    DARK: "0B1020",
+    DARKER: "070B14",
+    CARD: "121A2B",
+    CARD_LIGHT: "182338",
+    WHITE: "FFFFFF",
+    OFF_WHITE: "F8FAFC",
+
+    // Text
+    TEXT_PRIMARY: "F8FAFC",
+    TEXT_SECONDARY: "CBD5E1",
+    TEXT_MUTED: "94A3B8",
+    TEXT_DARK: "0F172A",
+
+    // Brand
+    PRIMARY: "6366F1",
+    PRIMARY_DARK: "4F46E5",
+    PRIMARY_LIGHT: "818CF8",
+
+    // Accent colors
+    CYAN: "06B6D4",
+    BLUE: "3B82F6",
+    PURPLE: "8B5CF6",
+    PINK: "EC4899",
+    GREEN: "22C55E",
+    YELLOW: "F59E0B",
+    ORANGE: "F97316",
+    RED: "EF4444",
+
+    // Borders
+    BORDER: "263247",
+    BORDER_LIGHT: "334155",
+
+    // Special
+    TRANSPARENT: "FFFFFF00",
+};
+
+
+// ============================================================
+// PRESENTATION CONSTANTS
+// ============================================================
+
+const SLIDE_WIDTH = 13.333;
+const SLIDE_HEIGHT = 7.5;
+
+const MARGIN_X = 0.75;
+
+const FONT_HEAD = "Aptos Display";
+const FONT_BODY = "Aptos";
+
+
+// ============================================================
+// MAIN FUNCTION
+// ============================================================
+
+export const generatePpt = async (data) => {
+
+    try {
+
+        const ppt = new pptxgen();
+
+        // ----------------------------------------------------
+        // Presentation metadata
+        // ----------------------------------------------------
+
+        ppt.layout = "LAYOUT_WIDE";
+
+        ppt.author = "FridayAI";
+        ppt.company = "FridayAI";
+        ppt.subject = data?.title || "FridayAI Presentation";
+        ppt.title = data?.title || "FridayAI Presentation";
+        ppt.lang = "en-US";
+
+        ppt.theme = {
+            headFontFace: FONT_HEAD,
+            bodyFontFace: FONT_BODY,
+            lang: "en-US"
+        };
+
+        // ----------------------------------------------------
+        // Slides
+        // ----------------------------------------------------
+
+        addCover(ppt, data);
+
+        data?.slides?.forEach((slide, index) => {
+
+            addContentSlide(
+                ppt,
+                slide,
+                index + 1,
+                data.slides.length
+            );
+
+        });
+
+        addThankYou(ppt);
+
+        return ppt;
+
+    } catch (error) {
+
+        console.error("PPT generation error:", error);
+
+        throw error;
+    }
+};
+
+
+// ============================================================
+// COVER SLIDE
+// ============================================================
+
+function addCover(ppt, data) {
+
+    const slide = ppt.addSlide();
+
+    slide.background = {
+        color: COLORS.DARKER
+    };
+
+    // ----------------------------------------
+    // Decorative gradient-like blocks
+    // ----------------------------------------
+
+    slide.addShape(ppt.ShapeType.arc, {
+        x: 8.9,
+        y: -1.8,
+        w: 5.5,
+        h: 5.5,
+
+        line: {
+            color: COLORS.PRIMARY,
+            transparency: 100
+        },
+
+        fill: {
+            color: COLORS.PRIMARY,
+            transparency: 85
+        }
+    });
+
+    slide.addShape(ppt.ShapeType.ellipse, {
+        x: 10.4,
+        y: 4.8,
+        w: 3.2,
+        h: 3.2,
+
+        line: {
+            color: COLORS.CYAN,
+            transparency: 100
+        },
+
+        fill: {
+            color: COLORS.CYAN,
+            transparency: 88
+        }
+    });
+
+
+    // ----------------------------------------
+    // Brand
+    // ----------------------------------------
+
+    slide.addText("FRIDAYAI", {
+        x: MARGIN_X,
+        y: 0.65,
+        w: 2,
+        h: 0.3,
+
+        fontFace: FONT_BODY,
+        fontSize: 12,
+        bold: true,
+
+        color: COLORS.PRIMARY_LIGHT,
+
+        charSpacing: 2,
+
+        margin: 0
+    });
+
+
+    // ----------------------------------------
+    // Small divider
+    // ----------------------------------------
+
+    slide.addShape(ppt.ShapeType.line, {
+        x: MARGIN_X,
+        y: 1.35,
+        w: 1.2,
+        h: 0,
+
+        line: {
+            color: COLORS.PRIMARY,
+            width: 3
+        }
+    });
+
+
+    // ----------------------------------------
+    // Title
+    // ----------------------------------------
+
+    slide.addText(data?.title || "Untitled Presentation", {
+
+        x: MARGIN_X,
+        y: 1.7,
+        w: 8.5,
+        h: 1.5,
+
+        fontFace: FONT_HEAD,
+        fontSize: 34,
+        bold: true,
+
+        color: COLORS.TEXT_PRIMARY,
+
+        margin: 0,
+
+        breakLine: false,
+
+        fit: "shrink"
+    });
+
+
+    // ----------------------------------------
+    // Subtitle
+    // ----------------------------------------
+
+    slide.addText(
+        data?.subtitle || "A professional presentation generated by FridayAI",
+        {
+
+            x: MARGIN_X,
+            y: 3.45,
+            w: 7.5,
+            h: 0.9,
+
+            fontFace: FONT_BODY,
+            fontSize: 18,
+
+            color: COLORS.TEXT_SECONDARY,
+
+            margin: 0,
+
+            breakLine: false,
+
+            fit: "shrink"
+        }
+    );
+
+
+    // ----------------------------------------
+    // Bottom information
+    // ----------------------------------------
+
+    slide.addText("AI GENERATED PRESENTATION", {
+
+        x: MARGIN_X,
+        y: 6.55,
+        w: 3,
+        h: 0.3,
+
+        fontFace: FONT_BODY,
+        fontSize: 9,
+        bold: true,
+
+        color: COLORS.TEXT_MUTED,
+
+        charSpacing: 1.5,
+
+        margin: 0
+    });
+
+
+    slide.addText(
+        new Date().toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+        }),
+        {
+
+            x: 10.2,
+            y: 6.55,
+            w: 2.3,
+            h: 0.3,
+
+            fontFace: FONT_BODY,
+            fontSize: 9,
+
+            color: COLORS.TEXT_MUTED,
+
+            align: "right",
+
+            margin: 0
+        }
+    );
+}
+
+
+// ============================================================
+// CONTENT SLIDE
+// ============================================================
+
+function addContentSlide(ppt, slideData, slideNumber, totalSlides) {
+
+    const slide = ppt.addSlide();
+
+    slide.background = {
+        color: COLORS.DARK
+    };
+
+
+    // ----------------------------------------
+    // Top accent line
+    // ----------------------------------------
+
+    slide.addShape(ppt.ShapeType.rect, {
+
+        x: 0,
+        y: 0,
+
+        w: SLIDE_WIDTH,
+        h: 0.05,
+
+        line: {
+            color: COLORS.PRIMARY,
+            transparency: 100
+        },
+
+        fill: {
+            color: COLORS.PRIMARY
+        }
+    });
+
+
+    // ----------------------------------------
+    // Slide number
+    // ----------------------------------------
+
+    slide.addText(
+        `${String(slideNumber).padStart(2, "0")} / ${String(totalSlides).padStart(2, "0")}`,
+        {
+
+            x: 11.4,
+            y: 0.48,
+            w: 1.1,
+            h: 0.3,
+
+            fontFace: FONT_BODY,
+            fontSize: 9,
+            bold: true,
+
+            color: COLORS.TEXT_MUTED,
+
+            align: "right",
+
+            margin: 0
+        }
+    );
+
+
+    // ----------------------------------------
+    // Slide title
+    // ----------------------------------------
+
+    slide.addText(slideData?.title || "Untitled", {
+
+        x: MARGIN_X,
+        y: 0.55,
+        w: 9.8,
+        h: 0.75,
+
+        fontFace: FONT_HEAD,
+        fontSize: 27,
+        bold: true,
+
+        color: COLORS.TEXT_PRIMARY,
+
+        margin: 0,
+
+        fit: "shrink"
+    });
+
+
+    // ----------------------------------------
+    // Accent under title
+    // ----------------------------------------
+
+    slide.addShape(ppt.ShapeType.line, {
+
+        x: MARGIN_X,
+        y: 1.43,
+        w: 0.75,
+        h: 0,
+
+        line: {
+            color: COLORS.PRIMARY,
+            width: 3
+        }
+    });
+
+
+    // ----------------------------------------
+    // Content card
+    // ----------------------------------------
+
+    slide.addShape(ppt.ShapeType.roundRect, {
+
+        x: 0.65,
+        y: 1.75,
+        w: 12.05,
+        h: 4.65,
+
+        rectRadius: 0.08,
+
+        line: {
+            color: COLORS.BORDER,
+            width: 1
+        },
+
+        fill: {
+            color: COLORS.CARD
+        }
+    });
+
+
+    // ----------------------------------------
+    // Bullet points
+    // ----------------------------------------
+
+    const points = Array.isArray(slideData?.points)
+        ? slideData.points
+        : [];
+
+
+    const colors = [
+        COLORS.PRIMARY_LIGHT,
+        COLORS.CYAN,
+        COLORS.PURPLE,
+        COLORS.PINK,
+        COLORS.GREEN,
+        COLORS.ORANGE
+    ];
+
+
+    const startY = 2.15;
+    const gap = points.length <= 4 ? 0.9 : 0.68;
+
+
+    points.forEach((point, index) => {
+
+        const y = startY + index * gap;
+
+        const accentColor =
+            colors[index % colors.length];
+
+
+        // Bullet circle
+
+        slide.addShape(ppt.ShapeType.ellipse, {
+
+            x: 1.05,
+            y: y + 0.08,
+
+            w: 0.22,
+            h: 0.22,
+
+            line: {
+                color: accentColor,
+                transparency: 100
+            },
+
+            fill: {
+                color: accentColor
+            }
+        });
+
+
+        // Bullet text
+
+        slide.addText(point, {
+
+            x: 1.45,
+            y: y,
+
+            w: 10.55,
+            h: 0.55,
+
+            fontFace: FONT_BODY,
+
+            fontSize: points.length <= 4
+                ? 17
+                : 15,
+
+            color: COLORS.TEXT_SECONDARY,
+
+            margin: 0,
+
+            breakLine: false,
+
+            fit: "shrink",
+
+            valign: "mid"
+        });
+
+    });
+
+
+    // ----------------------------------------
+    // Footer
+    // ----------------------------------------
+
+    slide.addText("FRIDAYAI", {
+
+        x: MARGIN_X,
+        y: 6.85,
+        w: 1.2,
+        h: 0.25,
+
+        fontFace: FONT_BODY,
+        fontSize: 8,
+        bold: true,
+
+        color: COLORS.TEXT_MUTED,
+
+        charSpacing: 1.5,
+
+        margin: 0
+    });
+}
+
+
+// ============================================================
+// THANK YOU SLIDE
+// ============================================================
+
+function addThankYou(ppt) {
+
+    const slide = ppt.addSlide();
+
+    slide.background = {
+        color: COLORS.DARKER
+    };
+
+
+    // ----------------------------------------
+    // Decorative circles
+    // ----------------------------------------
+
+    slide.addShape(ppt.ShapeType.ellipse, {
+
+        x: -1.2,
+        y: -1.5,
+        w: 4.5,
+        h: 4.5,
+
+        line: {
+            color: COLORS.PRIMARY,
+            transparency: 100
+        },
+
+        fill: {
+            color: COLORS.PRIMARY,
+            transparency: 90
+        }
+    });
+
+
+    slide.addShape(ppt.ShapeType.ellipse, {
+
+        x: 10.5,
+        y: 4.8,
+        w: 4,
+        h: 4,
+
+        line: {
+            color: COLORS.CYAN,
+            transparency: 100
+        },
+
+        fill: {
+            color: COLORS.CYAN,
+            transparency: 90
+        }
+    });
+
+
+    // ----------------------------------------
+    // Main text
+    // ----------------------------------------
+
+    slide.addText("Thank You", {
+
+        x: 2,
+        y: 2.35,
+        w: 9.3,
+        h: 0.9,
+
+        fontFace: FONT_HEAD,
+        fontSize: 42,
+        bold: true,
+
+        color: COLORS.WHITE,
+
+        align: "center",
+
+        margin: 0
+    });
+
+
+    // ----------------------------------------
+    // Subtitle
+    // ----------------------------------------
+
+    slide.addText("Questions, ideas, or discussions?", {
+
+        x: 2.5,
+        y: 3.45,
+        w: 8.3,
+        h: 0.5,
+
+        fontFace: FONT_BODY,
+        fontSize: 17,
+
+        color: COLORS.TEXT_SECONDARY,
+
+        align: "center",
+
+        margin: 0
+    });
+
+
+    // ----------------------------------------
+    // Brand
+    // ----------------------------------------
+
+    slide.addText("POWERED BY FRIDAYAI", {
+
+        x: 4,
+        y: 5.45,
+        w: 5.3,
+        h: 0.35,
+
+        fontFace: FONT_BODY,
+        fontSize: 10,
+        bold: true,
+
+        color: COLORS.PRIMARY_LIGHT,
+
+        charSpacing: 2,
+
+        align: "center",
+
+        margin: 0
+    });
+
+
+    slide.addShape(ppt.ShapeType.line, {
+
+        x: 5.55,
+        y: 5.95,
+        w: 2.2,
+        h: 0,
+
+        line: {
+            color: COLORS.PRIMARY,
+            width: 2
+        }
+    });
+}

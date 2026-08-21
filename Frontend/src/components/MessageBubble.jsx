@@ -88,8 +88,25 @@ function MessageBubble({ role, content, images }) {
                     p: ({ children }) => {
                         return <p className="text-sm mb-2">{children}</p>
                     },
-                    a: ({ href, children }) => {
-                        return <a target="_blank" rel="noreferrer" className="text-sm text-indigo-400 underline flex items-center gap-1" href={href} onClick={(e) => e.stopPropagation()}>{children} <ExternalLink size={14} /></a>
+                    a: ({ children, href, ...props }) => {
+                        return (
+                            <a
+                                href={href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="
+                text-sm
+                text-blue-400
+                hover:text-blue-300
+                underline
+                underline-offset-2
+                transition-colors
+            "
+                                {...props}
+                            >
+                                {children}
+                            </a>
+                        )
                     },
                     ul: ({ children }) => {
                         return <ul className="list-disc pl-5">{children}</ul>
@@ -272,30 +289,53 @@ function MessageBubble({ role, content, images }) {
                             </del>
                         );
                     },
+
+                    link: ({ href, children }) => {
+                        return (
+                            <a href={href} target="_blank" className="text-blue-400 underline">{children}</a>
+                        )
+                    },
+                    img: ({ src, alt }) => {
+                        return (
+                            <img
+                                src={src}
+                                alt={alt || "Generated image"}
+                                className="w-60 h-48 rounded-2xl object-cover border-white/10 cursor-zoom-in hover:opacity-90 transition-opacity duration-200"
+                                loading="lazy"
+                                onError={(e) => e.target.style.display = "none"}
+                                onClick={() => {
+                                    setLightBox(true);
+                                    setSelectedImage(src);
+                                }}
+                            />
+                        )
+                    },
                 }} remarkPlugins={[remarkGfm]}>
                     {content}
                 </Markdown>
             </div>
 
-            {lightBox && <div className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-[1000]">
+            {
+                lightBox && <div className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-[1000]">
 
-                <div className="cursor-zoom-out relative w-[90vw] h-[90vh] max-w-7xl max-h-[90vh] flex items-center justify-center">
-                    <button
-                        onClick={() => setLightBox(false)}
-                        className="cursor-pointer absolute top-6 right-6 text-white text-3xl hover:scale-110 transition-transform duration-200"
-                    >
-                        ×
-                    </button>
-                    <img
-                        src={selectedImage}
-                        alt=""
-                        className="w-full max-w-full h-auto max-h-[85vh] object-contain"
-                    />
+                    <div className="cursor-zoom-out relative w-[90vw] h-[90vh] max-w-7xl max-h-[90vh] flex items-center justify-center">
+                        <button
+                            onClick={() => setLightBox(false)}
+                            className="cursor-pointer absolute top-6 right-6 text-white text-3xl hover:scale-110 transition-transform duration-200"
+                        >
+                            ×
+                        </button>
+                        <img
+                            src={selectedImage}
+                            alt=""
+                            className="w-full max-w-full h-auto max-h-[85vh] object-contain"
+                        />
+
+                    </div>
 
                 </div>
-
-            </div>}
-        </div>
+            }
+        </div >
     );
 }
 

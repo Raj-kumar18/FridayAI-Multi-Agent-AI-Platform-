@@ -1,4 +1,4 @@
-import { Code2, FileText, Image, MessageSquare, Mic, Paperclip, Presentation, Search, Send, Zap } from "lucide-react";
+import { Code2, FileText, Globe, Image, MessageSquare, Mic, Paperclip, Presentation, Search, Send, Zap } from "lucide-react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import sendMessage from "../features/sendMessage";
@@ -107,13 +107,13 @@ function ChatInput() {
             label: "PPT"
         },
         {
-            id: "image",
+            id: "vision",
             icon: Image,
-            label: "Image"
+            label: "Vision"
         },
         {
             id: "search",
-            icon: Search,
+            icon: Globe,
             label: "Search"
         }
     ]

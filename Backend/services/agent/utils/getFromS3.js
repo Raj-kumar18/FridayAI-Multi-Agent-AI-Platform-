@@ -1,17 +1,12 @@
-import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import s3 from "../config/s3.js"
 
-export const getFromS3 = async (key) => {
-    const s3 = new S3Client({
-        region: process.env.AWS_REGION,
-        credentials: {
-            accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-        }
-    })
+export const getFromS3 = async (filename, expiresIn = 600) => {
     const command = new GetObjectCommand({
-        Bucket: process.env.AWS_BUCKET,
-        Key: key,
+        Bucket: process.env.AWS_BUCKET_NAME,
+        Key: filename
     })
-    const response = await s3.send(command)
-    return response.Body.toString("utf-8")
+    const signedUrl = await getSignedUrl(s3, command, { expiresIn })
+    return signedUrl
 }

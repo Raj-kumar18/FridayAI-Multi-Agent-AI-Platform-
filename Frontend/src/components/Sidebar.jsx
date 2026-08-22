@@ -22,6 +22,7 @@ import { createConversation } from "../features/createConversation";
 import { useSelector } from "react-redux";
 import logOut from "../features/logOut";
 import { setUserData } from "../redux/slices/userSlice";
+import BillingPlan from "./BillingPlan";
 
 function Sidebar() {
 
@@ -36,6 +37,7 @@ function Sidebar() {
     console.log(userData)
     const [collapsed, setCollapsed] = useState(false)
     const [imageError, setImageError] = useState(false)
+    const [showBilling, setShowBilling] = useState(false)
 
     useEffect(() => {
         const getConv = async () => {
@@ -236,7 +238,7 @@ function Sidebar() {
                                 </div>
 
                                 <div className="flex gap-1">
-                                    <button className="flex items-center justify-center w-7 h-7 rounded-[7px] border-none bg-transparent text-yellow-600 cursor-pointer hover:bg-white/[0.08] hover:text-slate-400 transition-all duration-150">
+                                    <button onClick={() => setShowBilling(true)} className="flex items-center justify-center w-7 h-7 rounded-[7px] border-none bg-transparent text-yellow-600 cursor-pointer hover:bg-white/[0.08] hover:text-slate-400 transition-all duration-150">
                                         <Coins size={16} />
                                     </button>
                                     <button className="flex items-center justify-center w-7 h-7 rounded-[7px] border-none bg-transparent text-slate-600 cursor-pointer hover:bg-white/[0.08] hover:text-slate-400 transition-all duration-150" onClick={() => {
@@ -248,13 +250,17 @@ function Sidebar() {
                                 </div>
 
 
-                            </div>) : <button></button>}
+                            </div>) : <button className="w-full flex items-center justify-center gap-2.5 text-sm font-medium text-white bg-linear-to-br from-orange-500 to-orange-700 rounded-xl py-[10px] border-none cursor-pointer hover:opacity-90 transition-opacity duration-150" onClick={() => navigate("/login")}>Login</button>}
 
 
                     </div>
                 </div>
 
+
             </div>
+            {
+                showBilling && <BillingPlan showBilling={showBilling} setShowBilling={setShowBilling} />
+            }
 
         </div>
     )

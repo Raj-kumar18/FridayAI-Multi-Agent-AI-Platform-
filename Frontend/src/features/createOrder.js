@@ -1,8 +1,8 @@
 import api from "../../utils/axios"
 
-export const createOrder = async (payload) => {
+export const createOrder = async (plan) => {
     try {
-        const { data } = await api.post("/api/billing/create-order", payload);
+        const { data } = await api.post("/api/billing/create-order", { plan });
         console.log(data)
         return data;
     } catch (error) {

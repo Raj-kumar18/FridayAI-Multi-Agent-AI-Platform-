@@ -1,10 +1,12 @@
 import { getLLMModel } from "../../config/llmModel.js";
+import { deductCredits } from "../../utils/deductCredits.js";
 import { generatePdf } from "../../utils/generatePdf.js";
 import { getFromS3 } from "../../utils/getFromS3.js";
 import { uploadToS3 } from "../../utils/uploadToS3.js";
 
 export const pdfAgent = async (state) => {
     try {
+
         const llm = await getLLMModel("pdf");
 
         const prompt = `
@@ -65,7 +67,7 @@ ${state.prompt}
         if (!content) {
             throw new Error("LLM returned empty response");
         }
-
+        await deductCredits(state.userId, "pdf")
         // ============================================
         // Clean accidental markdown fences
         // ============================================

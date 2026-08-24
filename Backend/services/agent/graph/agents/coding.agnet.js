@@ -1,7 +1,9 @@
 import { getLLMModel } from "../../config/llmModel.js";
 import { AIMessage, HumanMessage, SystemMessage } from "@langchain/core/messages";
+import { deductCredits } from "../../utils/deductCredits.js";
 
 export const codingAgent = async (state) => {
+
     const intentLlm = await getLLMModel("intent")
     const llm = await getLLMModel("coding")
     const intentRes = await intentLlm.invoke(`
@@ -90,7 +92,7 @@ export const codingAgent = async (state) => {
         `
         const response = await llm.invoke(prompt);
         const data = JSON.parse(response.content);
-
+        await deductCredits(state.userId, "coding")
         return {
             ...state,
             aiResponse: "Code generated successfully",

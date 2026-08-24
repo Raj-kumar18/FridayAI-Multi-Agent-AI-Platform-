@@ -1,11 +1,12 @@
 import { getLLMModel } from "../../config/llmModel.js";
+import { deductCredits } from "../../utils/deductCredits.js";
 import { generatePpt } from "../../utils/generatePpt.js";
 import { getFromS3 } from "../../utils/getFromS3.js";
 import { uploadToS3 } from "../../utils/uploadToS3.js";
 
 export const pptAgent = async (state) => {
     try {
-
+        await deductCredits(state.userId, "ppt")
         // ============================================
         // GET LLM
         // ============================================
@@ -141,7 +142,7 @@ ${state.prompt}
         if (!rawContent) {
             throw new Error("LLM returned empty response");
         }
-
+        await deductCredits(state.userId, "pdf")
 
         // ============================================
         // PARSE JSON

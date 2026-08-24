@@ -2,13 +2,13 @@ import { Crown, X } from "lucide-react"
 import { AnimatePresence, motion } from "motion/react"
 import { useSelector } from "react-redux"
 import { createOrder } from "../features/createOrder";
+import { verifyPayment } from "../features/verifyPayment";
 
 
 function BillingPlan({ showBilling, setShowBilling }) {
     const { userData } = useSelector(
         state => state.user
     );
-
 
     console.log(userData)
 
@@ -18,19 +18,28 @@ function BillingPlan({ showBilling, setShowBilling }) {
             const data = await createOrder(plan)
             const options = {
 
-                key: import.meta.VITE_RAZORPAY_KEY,
-                amount: data.order.amount,
-                currency: data.order.currency,
+                key: import.meta.env.VITE_RAZORPAY_KEY,
+                amount: data?.order?.amount,
+                currency: data?.order?.currency,
                 name: "AI Agent Platform",
-                description: `${data.plan.name} Plan`,
-                order_id: data.order.id,
+                description: `${data?.plan?.name} Plan`,
+                order_id: data?.order?.id,
                 prefill: {
                     name: userData?.name,
                     email: userData?.email
                 },
-                handler: function (response) {
-                    console.log(response)
-                }
+                handler: async function (response) {
+                    const data = {
+                        razorpay_order_id: response.razorpay_order_id,
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_signature: response.razorpay_signature,
+                    };
+
+                    await verifyPayment(data);
+                    setShowBilling(false);
+                    window.location.reload(); // for retch updated user Data
+
+                },
 
             }
 
@@ -140,7 +149,7 @@ function BillingPlan({ showBilling, setShowBilling }) {
                             <h3 className="text-white font-semibold">Starter Plan</h3>
                             <p className="text-orange-400 text-2xl mt-2 font-bold">₹199</p>
                             <p className="text-slate-400 text-sm mt-1">500 Credits</p>
-                            <button onClick={handleUpgrade("starter")} className="mt-4 w-full rounded-lg bg-orange-600 hover:bg-orange-700 py-2 text-white cursor-pointer">Upgrade</button>
+                            <button disabled={userData.plan === "starter"} onClick={() => handleUpgrade("starter")} className={`mt-4 w-full rounded-lg  py-2 text-white cursor-pointer ${userData.plan === "starter" ? "bg-orange-300 cursor-not-allowed" : "bg-orange-600 hover:bg-orange-700"}`}>Upgrade</button>
                         </div>
                     </div>
 
@@ -149,7 +158,7 @@ function BillingPlan({ showBilling, setShowBilling }) {
                             <h3 className="text-white font-semibold">Pro Plan</h3>
                             <p className="text-orange-400 text-2xl mt-2 font-bold">₹499</p>
                             <p className="text-slate-400 text-sm mt-1">1000 Credits</p>
-                            <button onClick={handleUpgrade("pro")} className="mt-4 w-full rounded-lg bg-orange-600 hover:bg-orange-700 py-2 text-white cursor-pointer">Upgrade</button>
+                            <button disabled={userData.plan === "pro"} onClick={() => handleUpgrade("pro")} className={`mt-4 w-full rounded-lg  py-2 text-white cursor-pointer ${userData.plan === "pro" ? "bg-orange-300 cursor-not-allowed" : "bg-orange-600 hover:bg-orange-700"}`}>Upgrade</button>
                         </div>
                     </div>
 

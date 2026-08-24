@@ -1,12 +1,16 @@
 import { AIMessage, HumanMessage, SystemMessage } from "@langchain/core/messages"
 import { getLLMModel } from "../../config/llmModel.js"
 import { getMemory } from "../../config/memory.js"
+import { deductCredits } from "../../utils/deductCredits.js"
 
 export const chatAgent = async (states) => {
-    const llm = await getLLMModel("chat")
-    const history = await getMemory(states.conversationId)
 
-    const searchContext = states.searchResults ? `
+    try {
+
+        const llm = await getLLMModel("chat")
+        const history = await getMemory(states.conversationId)
+
+        const searchContext = states.searchResults ? `
     Web Search Results:
     ${JSON.stringify(states.searchResults)}
 
@@ -15,7 +19,7 @@ export const chatAgent = async (states) => {
     `: ""
 
 
-    const prompt = `
+        const prompt = `
     You are a FridayAI, an Intelligent AI assistant.
 
     ${searchContext}
@@ -42,27 +46,34 @@ export const chatAgent = async (states) => {
 
 
 
-    const messages = [
-        new SystemMessage(prompt)
-    ]
-    history.forEach((msg) => {
-        if (!msg.content) return;
+        const messages = [
+            new SystemMessage(prompt)
+        ]
+        history.forEach((msg) => {
+            if (!msg.content) return;
 
-        if (msg.role === "user") {
-            messages.push(new HumanMessage(msg.content));
+            if (msg.role === "user") {
+                messages.push(new HumanMessage(msg.content));
+            }
+
+            if (msg.role === "assistant") {
+                messages.push(new AIMessage(msg.content));
+            }
+        });
+
+        messages.push(new HumanMessage(states.prompt))
+
+        const response = await llm.invoke(messages)
+        await deductCredits(states.userId, "chat")
+        return {
+            ...states,
+            aiResponse: response.content,
         }
-
-        if (msg.role === "assistant") {
-            messages.push(new AIMessage(msg.content));
+    } catch (error) {
+        console.log(error)
+        return {
+            ...states,
+            aiResponse: "something went wrong. Please try again",
         }
-    });
-
-    messages.push(new HumanMessage(states.prompt))
-
-    const response = await llm.invoke(messages)
-
-    return {
-        ...states,
-        aiResponse: response.content,
     }
 }

@@ -7,6 +7,7 @@ dotenv.config()
 export const agent = async (req, res) => {
     try {
         const { prompt, conversationId, agent } = req.body
+        const userId = req.headers["x-user-id"]
 
 
         await axios.post(
@@ -21,7 +22,8 @@ export const agent = async (req, res) => {
         const result = await graph.invoke({
             prompt,
             conversationId,
-            agent
+            agent,
+            userId
         })
 
         console.log("🔥 GRAPH RESULT:", result)

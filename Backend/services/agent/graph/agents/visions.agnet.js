@@ -2,9 +2,11 @@ import axios from "axios";
 import { getLLMModel } from "../../config/llmModel.js";
 import { uploadToS3 } from "../../utils/uploadToS3.js";
 import { getFromS3 } from "../../utils/getFromS3.js";
+import { deductCredits } from "../../utils/deductCredits.js";
 
 export const visionAgent = async (state) => {
     try {
+
         const llm = await getLLMModel("image");
 
         const response = await llm.invoke(`
@@ -95,7 +97,7 @@ ${state.prompt}
         // ============================================
         // RESPONSE
         // ============================================
-
+        await deductCredits(state.userId, "vision")
         return {
             ...state,
 

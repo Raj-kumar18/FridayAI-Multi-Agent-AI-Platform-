@@ -39,6 +39,8 @@ export const getLLMModel = async (agent) => {
             return chatGroqModel;
         case "vision":
             return chatGoogleGenerativeAIModel;
+        case "imageAnalyzer":
+            return chatGoogleGenerativeAIModel;
         default:
             return chatGroqModel;
     }

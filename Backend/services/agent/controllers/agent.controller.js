@@ -8,6 +8,7 @@ export const agent = async (req, res) => {
     try {
         const { prompt, conversationId, agent } = req.body
         const userId = req.headers["x-user-id"]
+        const file = req.file
 
 
         await axios.post(
@@ -23,7 +24,8 @@ export const agent = async (req, res) => {
             prompt,
             conversationId,
             agent,
-            userId
+            userId,
+            file
         })
 
         console.log("🔥 GRAPH RESULT:", result)

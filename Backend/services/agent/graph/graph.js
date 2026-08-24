@@ -7,6 +7,9 @@ import { codingAgent } from "./agents/coding.agnet.js";
 import { chatAgent } from "./agents/chat.agnet.js";
 import { visionAgent } from "./agents/visions.agnet.js";
 import { searchAgent } from "./agents/search.agnet.js";
+import { pdfRag } from "./agents/pdfRag.agent.js";
+import { imageAnalyzer } from "./agents/imageAnalyzer.agent.js";
+
 
 const workFlow = new StateGraph(agentState)
 workFlow.addNode("router", router)
@@ -16,6 +19,8 @@ workFlow.addNode("pdfAgent", pdfAgent)
 workFlow.addNode("pptAgent", pptAgent)
 workFlow.addNode("codingAgent", codingAgent)
 workFlow.addNode("visionAgent", visionAgent)
+workFlow.addNode("pdfRag", pdfRag)
+workFlow.addNode("imageAnalyzer", imageAnalyzer)
 
 workFlow.addEdge("__start__", "router")
 workFlow.addConditionalEdges("router", (state) => {
@@ -32,6 +37,10 @@ workFlow.addConditionalEdges("router", (state) => {
             return "codingAgent"
         case "vision":
             return "visionAgent"
+        case "pdfRag":
+            return "pdfRag"
+        case "imageAnalyzer":
+            return "imageAnalyzer"
         default:
             return "chatAgent"
     }
@@ -41,7 +50,9 @@ workFlow.addConditionalEdges("router", (state) => {
     pdfAgent: "pdfAgent",
     pptAgent: "pptAgent",
     codingAgent: "codingAgent",
-    visionAgent: "visionAgent"
+    visionAgent: "visionAgent",
+    pdfRag: "pdfRag",
+    imageAnalyzer: "imageAnalyzer"
 })
 
 workFlow.addEdge("searchAgent", "chatAgent")
@@ -50,6 +61,8 @@ workFlow.addEdge("pdfAgent", "__end__")
 workFlow.addEdge("pptAgent", "__end__")
 workFlow.addEdge("codingAgent", "__end__")
 workFlow.addEdge("visionAgent", "__end__")
+workFlow.addEdge("imageAnalyzer", "__end__")
+workFlow.addEdge("pdfRag", "__end__")
 
 export const graph = workFlow.compile()
 

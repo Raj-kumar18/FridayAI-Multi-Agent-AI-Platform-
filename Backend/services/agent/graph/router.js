@@ -9,6 +9,21 @@ export const router = async (state) => {
         }
     }
 
+    if (state.file.mimetype === "application/pdf") {
+        return {
+            ...state,
+            agent: "pdfRag"
+        }
+    }
+
+    if (state.file.mimetype.startsWith("image/")) {
+        return {
+            ...state,
+            agent: "imageAnalyzer"
+        }
+    }
+
+
     const llm = await getLLMModel("router")
     const prompt = `You are an agent router
     Available agents:

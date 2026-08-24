@@ -2,11 +2,12 @@ import { AIMessage, HumanMessage, SystemMessage } from "@langchain/core/messages
 import { getLLMModel } from "../../config/llmModel.js"
 import { getMemory } from "../../config/memory.js"
 import { deductCredits } from "../../utils/deductCredits.js"
+import { checkAgentLimit } from "../../config/agentLimit.js"
 
 export const chatAgent = async (states) => {
 
     try {
-
+        await checkAgentLimit(states.userId, "chat")
         const llm = await getLLMModel("chat")
         const history = await getMemory(states.conversationId)
 
@@ -72,8 +73,8 @@ export const chatAgent = async (states) => {
     } catch (error) {
         console.log(error)
         return {
-            ...states,
-            aiResponse: "something went wrong. Please try again",
-        }
+            ...state,
+            aiResponse: error?.data?.message || " Please try again."
+        };
     }
 }

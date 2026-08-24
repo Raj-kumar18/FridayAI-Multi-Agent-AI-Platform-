@@ -1,3 +1,4 @@
+import { checkAgentLimit } from "../../config/agentLimit.js";
 import { getLLMModel } from "../../config/llmModel.js";
 import { deductCredits } from "../../utils/deductCredits.js";
 import { generatePdf } from "../../utils/generatePdf.js";
@@ -6,7 +7,7 @@ import { uploadToS3 } from "../../utils/uploadToS3.js";
 
 export const pdfAgent = async (state) => {
     try {
-
+        await checkAgentLimit(state.userId, "pdf")
         const llm = await getLLMModel("pdf");
 
         const prompt = `
@@ -163,7 +164,8 @@ This link will remain active for 24 hours.
 
         return {
             ...state,
-            aiResponse: "Something went wrong while generating the PDF."
+            aiResponse: error?.data?.message || "Failed to generate PDF. Please try again."
         };
+
     }
 };

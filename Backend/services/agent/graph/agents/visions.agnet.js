@@ -3,10 +3,11 @@ import { getLLMModel } from "../../config/llmModel.js";
 import { uploadToS3 } from "../../utils/uploadToS3.js";
 import { getFromS3 } from "../../utils/getFromS3.js";
 import { deductCredits } from "../../utils/deductCredits.js";
+import { checkAgentLimit } from "../../config/agentLimit.js";
 
 export const visionAgent = async (state) => {
     try {
-
+        await checkAgentLimit(state.userId, "vision")
         const llm = await getLLMModel("image");
 
         const response = await llm.invoke(`
@@ -115,7 +116,8 @@ Link expires in 24 hours.
 
         return {
             ...state,
-            aiResponse: "Failed to generate image",
+            aiResponse: error?.data?.message || "Failed to generate Image. Please try again."
         };
+
     }
 };

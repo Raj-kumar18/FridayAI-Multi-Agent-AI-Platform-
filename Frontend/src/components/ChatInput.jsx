@@ -2,7 +2,7 @@ import { Code2, FileText, Globe, Image, MessageSquare, Mic, Paperclip, Presentat
 import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import sendMessage from "../features/sendMessage";
-import { addMessage, setArtifacts, setMessage } from "../redux/slices/messageSlice";
+import { addMessage, setArtifacts, setIsLoading, setMessage } from "../redux/slices/messageSlice";
 import { createConversation } from "../features/createConversation.js";
 import { addConversation, setConvTitle, setSelectedConversation } from "../redux/slices/conversationSlice.js";
 import { updateConversation } from "../features/updateConversation.js";
@@ -21,6 +21,7 @@ function ChatInput() {
     const [value, setValue] = useState("");
 
     const handleSendMessage = async () => {
+        dispatch(setIsLoading(true))
         const prompt = value.trim();
 
         if (!prompt) return;
@@ -63,7 +64,7 @@ function ChatInput() {
                 content: value.trim()
             }))
             const data = await sendMessage(formData);
-
+            dispatch(setIsLoading(false))
             dispatch(setArtifacts(data.data.artifacts || []))
             dispatch(addMessage({
                 role: "assistant",

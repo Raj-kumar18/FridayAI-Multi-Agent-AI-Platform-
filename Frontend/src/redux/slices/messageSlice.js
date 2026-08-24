@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     messages: [],
-    artifacts: []
+    artifacts: [],
+    isLoading: false
 }
 
 const messageSlice = createSlice({
@@ -20,9 +21,12 @@ const messageSlice = createSlice({
         },
         addArtifact: (state, action) => {
             state.artifacts.push(action.payload)
+        },
+        setIsLoading: (state, action) => {
+            state.isLoading = action.payload
         }
     }
 })
 
-export const { setMessage, addMessage, setArtifacts, addArtifact } = messageSlice.actions
+export const { setMessage, addMessage, setArtifacts, addArtifact, setIsLoading } = messageSlice.actions
 export default messageSlice.reducer

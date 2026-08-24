@@ -4,7 +4,7 @@ import dotenv from "dotenv"
 import { addMessage } from "../config/memory.js";
 dotenv.config()
 
-export const agent = async (req, res) => {
+export const agent = async (req, res, next) => {
     try {
         const { prompt, conversationId, agent } = req.body
         const userId = req.headers["x-user-id"]
@@ -69,7 +69,7 @@ export const agent = async (req, res) => {
         })
 
     } catch (error) {
-
+        next(error)
         console.error("========== AGENT ERROR ==========");
 
         console.error("Message:", error.message);

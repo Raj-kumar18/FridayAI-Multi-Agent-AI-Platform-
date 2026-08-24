@@ -1,3 +1,4 @@
+import { checkAgentLimit } from "../../config/agentLimit.js";
 import { getLLMModel } from "../../config/llmModel.js";
 import { deductCredits } from "../../utils/deductCredits.js";
 import { generatePpt } from "../../utils/generatePpt.js";
@@ -6,6 +7,7 @@ import { uploadToS3 } from "../../utils/uploadToS3.js";
 
 export const pptAgent = async (state) => {
     try {
+        await checkAgentLimit(state.userId, "ppt")
         await deductCredits(state.userId, "ppt")
         // ============================================
         // GET LLM
@@ -274,11 +276,12 @@ Link expires in 24 hours.
             "Stack:",
             error.stack
         );
-
         return {
             ...state,
-            aiResponse:
-                "Failed to generate PPT. Please try again."
+            aiResponse: error?.data?.message || "Failed to generate PPT. Please try again."
         };
+
+
+
     }
 };

@@ -6,8 +6,10 @@ import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 
 import { vectorStore } from "../../config/vectorDB.js";
 import { getLLMModel } from "../../config/llmModel.js";
+import { checkAgentLimit } from "../../config/agentLimit.js";
 
 export const pdfRag = async (state) => {
+    await checkAgentLimit(state.userId, "pdf")
     let filePath = null;
 
     try {
@@ -154,8 +156,7 @@ ${state.prompt}
 
         return {
             ...state,
-            aiResponse:
-                "Failed to analyze the uploaded PDF."
+            aiResponse: error?.data?.message || "Failed to Analyzed uploaded PDF. Please try again."
         };
 
     } finally {

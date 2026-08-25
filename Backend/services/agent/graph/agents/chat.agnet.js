@@ -73,7 +73,7 @@ export const chatAgent = async (states) => {
     } catch (error) {
         console.log(error)
         return {
-            ...state,
+            ...states,
             aiResponse: error?.data?.message || " Please try again."
         };
     }

@@ -64,6 +64,10 @@ export const generatePdf = (data) => {
         // ============================================
 
         function drawFooter() {
+            const oldBottomMargin = doc.page.margins.bottom;
+            doc.page.margins.bottom = 0;
+
+            const savedY = doc.y;
 
             const y = pageHeight - 42;
 
@@ -105,6 +109,9 @@ export const generatePdf = (data) => {
                         align: "right"
                     }
                 );
+
+            doc.page.margins.bottom = oldBottomMargin;
+            doc.y = savedY;
         }
 
 

@@ -8,10 +8,13 @@ import { setUserData } from "../redux/slices/userSlice";
 import Sidebar from "../components/Sidebar";
 import ChatArea from "../components/ChatArea";
 import Artifact from "../components/Artifact";
+import SettingsPanel from "../components/SettingPanel";
+import { useState } from "react";
 
 function Home() {
     const user = useSelector((state) => state.user.userData);
     const dispatch = useDispatch();
+    const [showSettings, setShowSettings] = useState(false);
 
     const handleLogin = async (token) => {
         try {
@@ -57,18 +60,26 @@ function Home() {
 
             {/* Sidebar */}
             <div className="shrink-0 min-h-0">
-                <Sidebar />
+                <Sidebar setShowSettings={setShowSettings} />
             </div>
 
             {/* Main Chat */}
             <main className="flex min-w-0 min-h-0 flex-1 flex-col overflow-hidden">
-                <ChatArea />
+                <ChatArea setShowSettings={setShowSettings} />
             </main>
 
             {/* Artifact */}
             <div className="shrink-0 min-h-0">
                 <Artifact />
             </div>
+
+            {/* Settings Modal */}
+            {showSettings && (
+                <SettingsPanel
+                    showSettings={showSettings}
+                    setShowSettings={setShowSettings}
+                />
+            )}
 
             {/* Login Modal */}
             {!user && (

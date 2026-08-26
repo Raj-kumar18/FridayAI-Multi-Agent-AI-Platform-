@@ -36,6 +36,8 @@ export const router = async (state) => {
     - ppt
     - coding
     - vision
+    - calendar
+
 
     Rules:
 
@@ -94,6 +96,14 @@ export const router = async (state) => {
     Visual Q&A,
     Image interpretation.
 
+    calendar:
+    Add events,
+    Delete events,
+    Update events,
+    List events,
+    Check availability,
+    Calendar management.
+
     Return only one word:
     chat
     search
@@ -101,6 +111,7 @@ export const router = async (state) => {
     ppt
     coding
     vision
+    calendar
 
     User Query:
     ${state.prompt}

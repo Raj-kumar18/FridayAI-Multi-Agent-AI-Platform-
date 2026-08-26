@@ -5,7 +5,7 @@ import ChatInput from "./ChatInput";
 import { useDispatch, useSelector } from "react-redux";
 import { setMessage, setArtifacts } from "../redux/slices/messageSlice";
 import getMessage from "../features/getMessage";
-function ChatArea() {
+function ChatArea({ setShowSettings }) {
     const dispatch = useDispatch()
     const { selectedConversation } = useSelector(state => state.conversation)
 
@@ -29,7 +29,7 @@ function ChatArea() {
         <div className="flex h-full min-h-0 flex-1 flex-col w-full overflow-hidden">
             <Nav />
             <MessageList />
-            <ChatInput />
+            <ChatInput setShowSettings={setShowSettings} />
         </div>
     )
 }

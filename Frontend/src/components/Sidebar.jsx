@@ -25,14 +25,14 @@ import { useSelector } from "react-redux";
 import logOut from "../features/logOut";
 import { setUserData } from "../redux/slices/userSlice";
 import BillingPlan from "./BillingPlan";
-
-function Sidebar() {
+import SettingsPanel from "./SettingPanel";   // 👈 naya
+function Sidebar({ setShowSettings }) {
 
     const [mobileOpen, setMobileOpen] = useState(false)
     const dispatch = useDispatch()
     const { conversations, selectedConversation } = useSelector(
         state => state.conversation
-    );
+    )
 
     const { userData } = useSelector(
         state => state.user
@@ -54,7 +54,7 @@ function Sidebar() {
         }
 
         getConv()
-    }, [dispatch, userData?._id])
+    }, [dispatch, userData?._id || userData?.userId])
     const handleCreateConversation = async () => {
         try {
             const data = await createConversation();
@@ -253,8 +253,13 @@ function Sidebar() {
                                         <p className="text-[13.5px] font-semibold text-slate-100 truncate">{userData.name || "user"}</p>
                                         <p className="text-[11px] text-slate-600 mt-px">{userData?.plan || "Free"}</p>
                                     </div>
-
                                     <div className="flex gap-1">
+                                        <button
+                                            onClick={() => setShowSettings(true)}
+                                            className="flex items-center justify-center w-7 h-7 rounded-[7px] border-none bg-transparent text-slate-600 cursor-pointer hover:bg-white/[0.08] hover:text-slate-400 transition-all duration-150"
+                                        >
+                                            <Settings size={16} />
+                                        </button>
                                         <button onClick={() => setShowBilling(true)} className="flex items-center justify-center w-7 h-7 rounded-[7px] border-none bg-transparent text-yellow-600 cursor-pointer hover:bg-white/[0.08] hover:text-slate-400 transition-all duration-150">
                                             <Coins size={16} />
                                         </button>
@@ -265,7 +270,6 @@ function Sidebar() {
                                             <LogOut size={16} />
                                         </button>
                                     </div>
-
 
                                 </div>) : <button className="w-full flex items-center justify-center gap-2.5 text-sm font-medium text-white bg-linear-to-br from-orange-500 to-orange-700 rounded-xl py-[10px] border-none cursor-pointer hover:opacity-90 transition-opacity duration-150" onClick={() => navigate("/login")}>Login</button>}
 

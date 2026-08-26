@@ -9,6 +9,7 @@ import { visionAgent } from "./agents/visions.agnet.js";
 import { searchAgent } from "./agents/search.agnet.js";
 import { pdfRag } from "./agents/pdfRag.agent.js";
 import { imageAnalyzer } from "./agents/imageAnalyzer.agent.js";
+import { calendarAgent } from "./agents/calendar.agent.js";
 
 
 const workFlow = new StateGraph(agentState)
@@ -21,6 +22,7 @@ workFlow.addNode("codingAgent", codingAgent)
 workFlow.addNode("visionAgent", visionAgent)
 workFlow.addNode("pdfRag", pdfRag)
 workFlow.addNode("imageAnalyzer", imageAnalyzer)
+workFlow.addNode("calendarAgent", calendarAgent)
 
 workFlow.addEdge("__start__", "router")
 workFlow.addConditionalEdges("router", (state) => {
@@ -41,6 +43,8 @@ workFlow.addConditionalEdges("router", (state) => {
             return "pdfRag"
         case "imageAnalyzer":
             return "imageAnalyzer"
+        case "calendar":
+            return "calendarAgent"
         default:
             return "chatAgent"
     }
@@ -52,7 +56,8 @@ workFlow.addConditionalEdges("router", (state) => {
     codingAgent: "codingAgent",
     visionAgent: "visionAgent",
     pdfRag: "pdfRag",
-    imageAnalyzer: "imageAnalyzer"
+    imageAnalyzer: "imageAnalyzer",
+    calendarAgent: "calendarAgent"
 })
 
 workFlow.addEdge("searchAgent", "chatAgent")
@@ -63,6 +68,7 @@ workFlow.addEdge("codingAgent", "__end__")
 workFlow.addEdge("visionAgent", "__end__")
 workFlow.addEdge("imageAnalyzer", "__end__")
 workFlow.addEdge("pdfRag", "__end__")
+workFlow.addEdge("calendarAgent", "__end__")
 
 export const graph = workFlow.compile()
 

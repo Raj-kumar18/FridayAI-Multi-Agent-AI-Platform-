@@ -1,4 +1,4 @@
-import { Code2, FileText, Globe, Image, MessageSquare, Mic, Paperclip, Presentation, Search, Send, X, Zap } from "lucide-react";
+import { CalendarCheck, Code2, FileText, Globe, Image, MessageSquare, Mic, Paperclip, Presentation, Search, Send, X, Zap } from "lucide-react";
 import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import sendMessage from "../features/sendMessage";
@@ -7,7 +7,7 @@ import { createConversation } from "../features/createConversation.js";
 import { addConversation, setConvTitle, setSelectedConversation } from "../redux/slices/conversationSlice.js";
 import { updateConversation } from "../features/updateConversation.js";
 
-function ChatInput() {
+function ChatInput({ setShowSettings }) {
     const [selectedAgent, setSelectedAgent] = useState("Auto")
     const { selectedConversation } = useSelector(
         (state) => state.conversation
@@ -119,6 +119,11 @@ function ChatInput() {
             id: "search",
             icon: Globe,
             label: "Search"
+        },
+        {
+            id: "calendar",
+            icon: CalendarCheck,
+            label: "Calendar"
         }
     ]
 
@@ -128,16 +133,19 @@ function ChatInput() {
 
             <div className="flex flex-col gap-2 bg-white/[0.03] border border-white/[0.07] rounded-2xl px-4 pt-3.5 pb-3">
 
-                <div className="flex w-[80%} gap-2 pr-2 flex-wrap">
+                <div className="flex w-[80%] gap-2 pr-2 flex-wrap">
                     {agents.map((agent) => {
                         const isActive = selectedAgent === agent.label
                         const Icon = agent.icon
-                        console.log(isActive)
-
                         return (
                             <button
                                 key={agent.id}
-                                onClick={() => setSelectedAgent(agent.label)}
+                                onClick={() => {
+                                    setSelectedAgent(agent.label);
+                                    if (agent.id === "calendar") {
+                                        setShowSettings(true);
+                                    }
+                                }}
                                 className={`flex items-center gap-2 px-3 py-1.5 rounded-2xl transition-colors duration-200 cursor-pointer text-sm border
                             ${isActive
                                         ? "bg-orange-600 text-white border-orange-600"

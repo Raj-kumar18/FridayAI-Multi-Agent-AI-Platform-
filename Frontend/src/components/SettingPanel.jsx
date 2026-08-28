@@ -26,7 +26,7 @@ function SettingsPanel({ showSettings, setShowSettings }) {
                 <div className="border-t border-white/[0.06] pt-4">
                     <p className="text-[13px] font-medium text-slate-200 mb-1">Integrations</p>
                     <p className="text-[11.5px] text-slate-500 mb-4">
-                        Apne accounts connect karo taaki AI agent unke saath directly kaam kar sake.
+                        Connect Google Calendar acount so agent can easily work.
                     </p>
 
                     <div className="flex items-center justify-between rounded-xl bg-white/[0.03] px-3.5 py-3">

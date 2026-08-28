@@ -27,8 +27,8 @@ export const codingAgent = async (state) => {
         Return ONLY one of the above values based on the user request.
     `);
 
-        const intent = intentRes.content
-        if (intent === "CODE_GENERATION") {
+        const intent = intentRes.content.trim().toUpperCase();
+        if (intent.includes("CODE_GENERATION")) {
             const prompt = `
         You are a FridayAI Coding Agent.
 
@@ -93,7 +93,15 @@ export const codingAgent = async (state) => {
         ${state.prompt}
         `
             const response = await llm.invoke(prompt);
-            const data = JSON.parse(response.content);
+            let content = response.content;
+            if (content) {
+                content = content
+                    .replace(/^```json\s*/i, "")
+                    .replace(/^```\s*/i, "")
+                    .replace(/\s*```$/i, "")
+                    .trim();
+            }
+            const data = JSON.parse(content || "{}");
             await deductCredits(state.userId, "coding")
             return {
                 ...state,

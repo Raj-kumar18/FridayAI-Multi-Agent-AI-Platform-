@@ -1,4 +1,4 @@
-# 🦾 FridayAI — Multi-Agent AI Platform
+# FridayAI — Multi-Agent AI Platform
 
 **MERN + Microservices + LangGraph + RAG + Docker**
 
